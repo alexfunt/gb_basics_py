@@ -3,6 +3,8 @@ from os.path import exists
 
 
 filename = 'phone.csv'
+filename1 = 'newphone.csv'
+
 class  NameError(Exception):
     def __init__(self, txt):
         self.txt = txt
@@ -64,6 +66,13 @@ def standart_write(filename,res):
         f_w.writeheader()
         f_w.writerows(res)
 
+def new_write(filename1,row):
+    with open(filename1, 'w', encoding='utf-8') as Data:
+        f_w = DictWriter(Data, fieldnames=['Имя', 'Фамилия', 'Телефон'])
+        if Data.tell() == 0:
+            f_w.writeheader()
+        f_w.writerow(row)
+
 
 def change_row(filename):
     row_number = int(input("Введите номер строки: "))
@@ -73,6 +82,14 @@ def change_row(filename):
     res[row_number-1]["Фамилия"] = data[1]
     res[row_number-1]["Телефон"] = data[2]
     standart_write(filename,res)
+
+def copy_row(filename):
+    row_number = int(input("Введите номер строки: "))
+    res = read_file(filename)
+    if row_number > 0 and row_number <= len(res):
+        row = res[row_number-1]
+    create_file(filename1)
+    new_write(filename1,row)
 
 
 
@@ -106,6 +123,11 @@ def main():
                 print("Файл не сушествует")
                 continue
             change_row(filename)
+        elif command == 'p':
+            if not exists(filename):
+                print("Файл не сушествует")
+                continue
+            copy_row(filename)
 
 main()
 
